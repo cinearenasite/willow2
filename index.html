@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Willow by CineArena</title>
+  <link rel="icon" type="image/svg+xml" href="https://cinearena.xo.je/images/cinefav.png">
+       
+  <!-- Shaka Player -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: #000;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .shaka-video-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      object-fit: contain;
+    }
+
+    .shaka-spinner-container,
+    .shaka-spinner,
+    .shaka-spinner-svg {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+
+    /* Blue Controls & Icons */
+    .shaka-controls-button,
+    .shaka-overflow-button-label,
+    .shaka-current-time,
+    .shaka-time-container {
+      color: dark-blue !important;
+    }
+
+    .shaka-controls-button svg path {
+      fill: #1e90ff !important;
+    }
+
+/* Logo overlay - Responsive */
+.video-logo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  opacity: 0.8;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+  /* Responsive sizing */
+  width: clamp(50px, 12vw, 65px);
+  height: auto;
+  aspect-ratio: 65/20; /* Maintain original aspect ratio */
+}
+
+/* Desktop - larger screens */
+@media (min-width: 768px) {
+  .video-logo {
+    width: clamp(65px, 8vw, 80px);
+    top: 15px;
+    left: 15px;
+  }
+}
+
+/* Large desktop screens */
+@media (min-width: 1200px) {
+  .video-logo {
+    width: clamp(80px, 6vw, 100px);
+    top: 20px;
+    left: 20px;
+  }
+}
+
+/* Mobile - smaller screens */
+@media (max-width: 480px) {
+  .video-logo {
+    width: clamp(40px, 10vw, 50px);
+    top: 8px;
+    left: 8px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 320px) {
+  .video-logo {
+    width: clamp(30px, 8vw, 40px);
+    top: 5px;
+    left: 5px;
+  }
+}
+
+.video-logo:hover {
+  opacity: 1;
+}
+  </style>
+</head>
+
+<body>
+  <div class="shaka-video-container" data-shaka-player>
+    <video autoplay muted playsinline preload="metadata"
+      poster="https://blogger.googleusercontent.com/img/a/AVvXsEiGqaZeRBZ6Y7yV5ZYSRiNRhBa5q9_EMx7R5TJcHd3XJwwHh2YhNOGt76Y4vEcUIjvIaA7W-Tw1RyMLP-4WZwVHA4mk18zwXl7HdSL5WabprIasDOWJO7jpL0zTQB4p_y7X0Rv0xwe-cJ-GvxofAgeRp2FIiNgB90n_b8Cqw0sAaZqVhJg_fi9UyfSO8KY">
+    </video>
+
+    <!-- Logo Overlay with Telegram Link -->
+    <a href="https://t.me/cine_arena" target="_blank" rel="noopener noreferrer" style="display: block;">
+      <img class="video-logo" src="https://cinearena.xo.je/images/mylogo.png" alt="cinearena.live">
+    </a>
+  </div>
+
+<!-- 🔻 Online Counter (hidden) -->
+<div style="display:none;">
+  <script src="//widget.supercounters.com/ssl/online_t.js"></script>
+  <script>
+    sc_online_t(1707487,"Users Online","170ddb");
+  </script>
+  <noscript><a href="https://www.supercounters.com/">supercounters.com</a></noscript>
+</div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      shaka.polyfill.installAll();
+
+      if (!shaka.Player.isBrowserSupported()) {
+        console.error('Browser not supported');
+        return;
+      }
+
+      const video = document.querySelector('video');
+      const player = new shaka.Player();
+      await player.attach(video);
+
+      const container = document.querySelector('.shaka-video-container');
+      const ui = new shaka.ui.Overlay(player, container, video);
+
+      // Blue / Sky Controls
+      ui.configure({
+        controlPanelElements: [
+          'play_pause', 'mute', 'volume', 'time_and_duration',
+          'spacer', 'language', 'captions', 'picture_in_picture',
+          'quality', 'fullscreen'
+        ],
+        volumeBarColors: {
+          base: 'rgba(135, 206, 235, 0.35)',
+          level: 'rgb(255,255,255)'
+        },
+        seekBarColors: {
+          base: 'rgba(50, 55, 61)',
+          buffered: 'rgba(135, 206, 235, 0.6)',
+          played: 'rgb(255, 255, 255)'
+        }
+      });
+
+      // DRM Config
+      const drmConfig = {
+            clearKeys: {  
+          "24837c0b78e80b056a09495d0fd051b3":"5b90f3987781ea409190739762d2005e" 
+        }  
+      };  
+  
+      let streamUrl = "https://a201aivottlinear-a.akamaihd.net/OTTB/iad-nitro/live/clients/dash/enc/qlpqns8shq/out/v1/e36da545ab714b6a99b76c2b1fefd32f/cenc.mpd";  
+
+
+      player.configure({
+        drm: drmConfig,
+        streaming: {
+          lowLatencyMode: true,
+          bufferingGoal: 15,
+          rebufferingGoal: 2,
+          bufferBehind: 15,
+          retryParameters: {
+            timeout: 10000,
+            maxAttempts: 5,
+            baseDelay: 300,
+            backoffFactor: 1.2
+          },
+          segmentRequestTimeout: 8000,
+          segmentPrefetchLimit: 2,
+          useNativeHlsOnSafari: true
+        },
+        manifest: {
+          retryParameters: { timeout: 8000, maxAttempts: 3 }
+        }
+      });
+
+      player.addEventListener('error', (event) => {
+        console.error('Shaka Player Error:', event.detail);
+      });
+
+      try {
+        await player.load(streamUrl);
+        console.log("Stream loaded successfully");
+
+        // 🔥 FORCE AUTOPLAY
+        video.muted = true;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => console.log("Autoplay blocked:", err));
+        }
+
+      } catch (error) {
+        console.error('Load error:', error);
+      }
+
+      // Optional: Unmute on first click
+      document.addEventListener('click', () => {
+        if (video.muted) {
+          video.muted = false;
+          video.volume = 1;
+        }
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>
